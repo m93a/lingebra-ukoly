@@ -1,0 +1,912 @@
+%!TEX program = xelatex
+
+\documentclass[]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{bm}
+\usepackage{bbold}
+\usepackage{nameref}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage[a4paper, total={6in, 9.5in}]{geometry}
+\usepackage{fancyhdr}
+\usepackage{xfrac}
+
+\makeatletter
+\renewcommand*\env@matrix[1][*\c@MaxMatrixCols c]{%
+  \hskip -\arraycolsep
+  \let\@ifnextchar\new@ifnextchar
+  \array{#1}}
+\makeatother
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\leftmark}
+\rhead{Michl Grňo}
+\cfoot{\thepage}
+
+
+\renewcommand{\sectionmark}[1]{\markboth{#1}{}}
+
+
+\renewcommand{\d}[1][]{\ensuremath{\,\mathrm{d}{#1}}}
+
+\newcommand{\dd}[3][]{\ensuremath{\frac{\d^{#1} {#2}}{\d{#3}^{#1}}}}
+
+\newcommand{\pd}[3][]{\ensuremath{\frac{\partial^{#1} {#2}}{\partial {#3}^{#1}}}}
+
+\renewcommand{\U}[1]{\,\mathrm{#1}}
+
+\newcommand{\konst}{\,\mathrm{konst.}}
+
+\newcommand{\Id}[2]{\ensuremath{[\mathrm{Id}]_{#1}^{#2}}}
+
+\newcommand{\e}{\mathrm{e}}
+
+
+
+
+\title{Domácí práce na LAF II.}
+\date{6. 5. 2019}
+\author{Michal Grňo}
+
+\begin{document}
+
+\maketitle
+
+\begingroup
+\addtolength{\jot}{1em}
+
+\section{Cvičení 8 – domácí úloha}
+
+\subsection{Zadání}
+Určete $A^n$ pro všechna $n \in \mathbb{N}$ pro matici \(A = \begin{pmatrix}
+    2 & 0 & 2 & -2 \\
+    1 & 1 & 1 & -1 \\
+    -2 & 0 & -3 & 3 \\
+    -1 & 0 & -2 & 2
+\end{pmatrix} \).
+
+\subsection{Řešení}
+Nejprve nalezneme vlastní čísla:
+\begin{align*}
+    | A - \lambda E |
+    &=  \begin{vmatrix}
+        2 - \lambda & 0 & 2 & -2 \\
+        1 & 1 - \lambda & 1 & -1 \\
+        -2 & 0 & -3-\lambda & 3 \\
+        -1 & 0 & -2 & 2-\lambda
+    \end{vmatrix}
+    = (1 - \lambda) (-1)^{2+2} \begin{vmatrix}
+        2-\lambda & 2 & -2 \\
+        -2 & -3-\lambda & 3 \\
+        -1 & -2 & 2-\lambda
+    \end{vmatrix}
+    = \\
+    &= (1-\lambda)\big(\;
+        -(2-\lambda)^2 (3+\lambda) \; - \; 8 \; - \; 6 \;
+        + \; 6 (2-\lambda) \; + \; 4 (2-\lambda) \; + \; 2 (3+\lambda)
+    \;\big) \\
+    &= (1-\lambda)( -\lambda^3 + \lambda^2 ) \; = \; \lambda^2 (1-\lambda)^2 \\
+    &\implies \lambda_{1,2} = 0, \;\;\; \lambda_{3,4} = 1
+\end{align*}
+
+\medskip
+\medskip
+
+Následně vyšetříme vlastní podprostor pro $\lambda=0$:
+\begin{align*}
+    A \sim
+    \begin{pmatrix}
+        2 & 0 & 2 & -2 \\
+        1 & 1 & 1 & -1 \\
+        -2 & 0 & -3 & 3 \\
+        -1 & 0 & -2 & 2
+    \end{pmatrix} \sim
+    \begin{pmatrix}
+        1 & 0 & 2 & -2 \\
+        0 & 1 & -1 & 1 \\
+        2 & 0 & 2 & -2 \\
+        -2 & 0 & -3 & 3 \\
+    \end{pmatrix} \sim
+    \begin{pmatrix}
+        1 & & & \\
+        & 1 & & \\
+        & & 1 & -1 \\
+        & & & 0 \\
+    \end{pmatrix}
+    \rightarrow
+    \begin{pmatrix}
+        0 \\ 0 \\ 1 \\ 1
+    \end{pmatrix}
+\end{align*}
+
+\medskip
+\medskip
+
+Jádro je jednorozměrné, řetízek tedy musí mít délku 2.
+\begin{align*}
+    \begin{pmatrix}[cccc|c]
+        2 & 0 & 2 & -2 & 0\\
+        1 & 1 & 1 & -1 & 0\\
+        -2 & 0 & -3 & 3 & 1\\
+        -1 & 0 & -2 & 2 & 1
+    \end{pmatrix} \sim
+    \begin{pmatrix}[cccc|c]
+        1 & 0 & 2 & -2 & -1\\
+        0 & 1 & -1 & -1 & 1\\
+        0 & 0 & -2 & 2 & 2\\
+        0 & 0 & 1 & -1 & -1
+    \end{pmatrix} \sim
+    \begin{pmatrix}[cccc|c]
+        1 & & & & 1 \\
+        & 1 & & & 0 \\
+        & & 1 & -1 & -1 \\
+        & & & 0 & 0
+    \end{pmatrix}
+    \rightarrow
+    \begin{pmatrix}
+        1 \\ 0 \\ -1 \\ 0
+    \end{pmatrix}
+\end{align*}
+
+\medskip
+\medskip
+
+Nyní vyšetříme vlastní podprostor odpovídající $\lambda=1$:
+\begin{align*}
+    A-1E \sim
+    \begin{pmatrix}
+        1 & 0 & 2 & -2 \\
+        1 & 0 & 1 & -1 \\
+        -2 & 0 & -4 & 3 \\
+        -1 & 0 & -2 & 1
+    \end{pmatrix} \sim
+    \begin{pmatrix}
+        1 & 0 & 2 & -2 \\
+        0 & 0 & -1 & 1 \\
+        0 & 0 & 0 & -1 \\
+        0 & 0 & 0 & -1
+    \end{pmatrix} \sim
+    \begin{pmatrix}
+        1 & & & \\
+        & 0 & & \\
+        & & 1 & \\
+        & & & 1
+    \end{pmatrix}
+    \rightarrow
+    \begin{pmatrix}
+        0 \\ 1 \\ 0 \\ 0
+    \end{pmatrix}
+\end{align*}
+
+\medskip
+\medskip
+
+Jádro je opět jednorozměrné.
+\begin{align*}
+    \begin{pmatrix}[cccc|c]
+        1 & 0 & 2 & -2 & 0\\
+        1 & 0 & 1 & -1 & 1\\
+        -2 & 0 & -4 & 3 & 0\\
+        -1 & 0 & -2 & 1 & 0
+    \end{pmatrix} \sim
+    \begin{pmatrix}[cccc|c]
+        1 & 0 & 2 & -2 & 0\\
+        0 & 0 & -1 & 1 & 1\\
+        0 & 0 & 0 & -1 & 0\\
+        0 & 0 & 0 & -1 & 0
+    \end{pmatrix} \sim
+    \begin{pmatrix}[cccc|c]
+        1 & & & & 2\\
+        & 0 & & & 0\\
+        & & 1 & & -1\\
+        & & & 1 & 0
+    \end{pmatrix}
+    \rightarrow
+    \begin{pmatrix}
+        2 \\ 0 \\ -1 \\ 0
+    \end{pmatrix}
+\end{align*}
+
+\medskip
+\medskip
+
+Reprezentace matice v Jordanově bázi $[A]_B^B = J$ a matice přechodu $\Id{B}{K} = V$ jsou tedy:
+\begin{align*}
+    J =
+    \begin{pmatrix}
+        0 & 1 \\
+          & 0 \\
+          &   & 1 & 1 \\
+          &   &   & 1
+    \end{pmatrix}
+    \;\;\;\;\;\;
+    V =
+    \begin{pmatrix}
+        0 & 1 & 0 & 2\\
+        0 & 0 & 1 & 0\\
+        1 &-1 & 0 & -1\\
+        1 & 0 & 0 & 0
+    \end{pmatrix}
+\end{align*}
+
+\medskip
+\medskip
+
+Zbývá nalézt inverzní matici k $V$:
+\begin{align*}
+    &
+    \begin{pmatrix}[cccc|cccc]
+        0 & 1 & 0 & 2  &  1 & 0 & 0 & 0 \\
+        0 & 0 & 1 & 0  &  0 & 1 & 0 & 0 \\
+        1 &-1 & 0 &-1  &  0 & 0 & 1 & 0 \\
+        1 & 0 & 0 & 0  &  0 & 0 & 0 & 1
+    \end{pmatrix} \sim
+    \begin{pmatrix}[cccc|cccc]
+        1 & 0 & 0 & 0  &  0 & 0 & 0 & 1 \\
+        0 & 1 & 0 & 1  &  0 & 0 &-1 & 1 \\
+        0 & 0 & 1 & 0  &  0 & 1 & 0 & 0 \\
+        0 & 1 & 0 & 2  &  1 & 0 & 0 & 0 \\
+    \end{pmatrix} \sim
+    \begin{pmatrix}[cccc|cccc]
+        1 & 0 & 0 & 0  &  0 & 0 & 0 & 1 \\
+        0 & 1 & 0 & 0  & -1 & 0 &-2 & 2 \\
+        0 & 0 & 1 & 0  &  0 & 1 & 0 & 0 \\
+        0 & 0 & 0 & 1  &  1 & 0 & 1 &-1 \\
+    \end{pmatrix}
+\end{align*}
+\begin{align*}
+    \Id{K}{B} = 
+    V^{-1} =
+    \begin{pmatrix}
+        0 & 0 & 0 & 1 \\
+       -1 & 0 &-2 & 2 \\
+        0 & 1 & 0 & 0 \\
+        1 & 0 & 1 &-1
+    \end{pmatrix}
+\end{align*}
+
+\medskip
+\medskip
+
+Nakonec dopočítáme $A^n$:
+\begin{align*}
+    A^n
+    = (V J V^{-1})^n
+    = V J^n V^{-1}
+    = V \; \begin{pmatrix}
+        0 & 0^{n-1} \\
+          & 0 \\
+          &   & 1 & n \\
+          &   &   & 1
+    \end{pmatrix}
+    V^{-1}
+    \mathrm{,\;kde}\;\;
+    0^0 = 1
+\end{align*}
+
+\medskip
+\medskip
+
+Vydělíme nyní triviální případ $A^1=A$. Pro $n>1$ platí:
+\begin{align*}
+    A^n =
+    \begin{pmatrix}
+        0 & 1 & 0 & 2\\
+        0 & 0 & 1 & 0\\
+        1 &-1 & 0 & -1\\
+        1 & 0 & 0 & 0
+    \end{pmatrix}
+    \begin{pmatrix}
+        0 & 0 & 0 & 0 \\
+        0 & 0 & 0 & 0 \\
+        0 & 0 & 1 & n \\
+        0 & 0 & 0 & 1        
+    \end{pmatrix}
+    \begin{pmatrix}
+        0 & 0 & 0 & 1 \\
+       -1 & 0 &-2 & 2 \\
+        0 & 1 & 0 & 0 \\
+        1 & 0 & 1 &-1
+    \end{pmatrix}
+    =
+    \begin{pmatrix}
+        2 & 0 & 2 &-2 \\
+        n & 1 & n &-n \\
+        -1& 0 &-1 & 1 \\
+        0 & 0 & 0 & 0
+    \end{pmatrix}.
+\end{align*}
+
+\subsection{Výsledek}
+\begin{align*}
+    A^1 &= A, \\
+    A^n &= 
+    \begin{pmatrix}
+        2 & 0 & 2 &-2 \\
+        n & 1 & n &-n \\
+        -1& 0 &-1 & 1 \\
+        0 & 0 & 0 & 0
+    \end{pmatrix}, \;\; n \in \{2, 3, 4, ...\}.
+\end{align*}
+
+
+\pagebreak
+
+\section{Cvičení 9 – hodnocená úloha}
+\subsection{Zadání}
+Nalezněte řešení diferenciální rovnice $\dot{x}(t) = A x(t)$, kde $x(t): \mathbb{R} \rightarrow \mathbb{C}^3$ a
+\begin{align*}
+    x(0) &=
+    \begin{pmatrix}
+        1 & -1 & 1
+    \end{pmatrix}^\mathrm{T},
+    \\
+    A &=
+    \begin{pmatrix}
+        -2 & 1 & 2 \\
+        -1 & 0 & 2 \\
+        -2 & 0 & 3
+    \end{pmatrix}.
+\end{align*}
+
+\subsection{Řešení}
+Obecným řešením rovnice je $x(t) = \exp(tA) x(0)$, a protože $A = VJV^{-1} \iff \exp(A) = V \exp(J) V^{-1}$, začneme hledáním Jordanova tvaru:
+\begin{align*}
+    | A - \lambda E |
+    = \begin{vmatrix}
+        -2-\lambda & 1 & 2 \\
+        -1 & -\lambda & 2 \\
+        -2 & 0 & 3-\lambda
+    \end{vmatrix}
+    \;=\; -\lambda^3 + \lambda^2 + \lambda - 1
+    \;=\; -(\lambda - 1)^2 (\lambda + 1)
+\end{align*}
+\begin{align*}
+    \lambda_{1,2} = 1, \;\;\;\;\;\; \lambda_3 = -1.
+\end{align*}
+
+\medskip
+\medskip
+
+Nejprve vyšetříme vlastní prostor pro $\lambda=1$:
+\begin{align*}
+    A - 1E
+    \sim
+    \begin{pmatrix}
+        -3 & 1 & 2 \\
+        -1 &-1 & 2 \\
+        -2 & 0 & 2 \\
+    \end{pmatrix}
+    \sim
+    \begin{pmatrix}
+        1 & 0 & -1 \\
+        0 & 1 & -1
+    \end{pmatrix}
+    \rightarrow
+    \begin{pmatrix}
+        2 \\ 2 \\ 2
+    \end{pmatrix}
+\end{align*}
+
+\medskip
+\medskip
+
+Jádro je dimenze 1, to znamená jeden řetízek délky 2.
+\begin{align*}
+    \begin{pmatrix}[ccc|c]
+        -3 & 1 & 2 & 2 \\
+        -1 &-1 & 2 & 2 \\
+        -2 & 0 & 2 & 2 \\
+    \end{pmatrix}
+    \sim
+    \begin{pmatrix}[ccc|c]
+        1 & 0 & -1 & -1 \\
+        0 & 1 & -1 & -1
+    \end{pmatrix}
+    \rightarrow
+    \begin{pmatrix}
+        -1 \\ -1 \\ 0
+    \end{pmatrix}
+\end{align*}
+
+\medskip
+\medskip
+
+Nyní vyšetříme vlastní prostor odpovídající $\lambda=-1$:
+\begin{align*}
+    A - (-1)E
+    \sim
+    \begin{pmatrix}
+        -1 & 1 & 2 \\
+        -1 & 1 & 2 \\
+        -2 & 0 & 4
+    \end{pmatrix}
+    \sim
+    \begin{pmatrix}
+        1 & -1 & -2 \\
+        -1 & 0 & 2
+    \end{pmatrix}
+    \sim
+    \begin{pmatrix}
+        1 & 0 & -2 \\
+        0 & 1 & 0
+    \end{pmatrix}
+    \rightarrow
+    \begin{pmatrix}
+        2 \\ 0 \\ 1
+    \end{pmatrix}
+\end{align*}
+
+\medskip
+\medskip
+
+Teď nalezneme matici inverzní k přechodové:
+\begin{align*}
+    \begin{pmatrix}[ccc|ccc]
+        2 & -1 & 2  &  1 & 0 & 0 \\
+        2 & -1 & 0  &  0 & 1 & 0 \\
+        2 &  0 & 1  &  0 & 0 & 1
+    \end{pmatrix}
+    \sim
+    \begin{pmatrix}[ccc|ccc]
+        2 & 0 & 1  &  0 & 0 & 1 \\
+        0 & 1 & 1  &  0 &-1 & 1 \\
+        0 & 0 & 2  &  1 &-1 & 0
+    \end{pmatrix}
+    \sim
+    \begin{pmatrix}[ccc|ccc]
+        1 & 0 & 0  &  -\sfrac{1}{4} &  \sfrac{1}{4} & \sfrac{1}{2} \\
+        0 & 1 & 0  &  -\sfrac{1}{2} & -\sfrac{1}{2} & 1 \\
+        0 & 0 & 1  &  \sfrac{1}{2}  & -\sfrac{1}{2} & 0
+    \end{pmatrix}
+\end{align*}
+\begin{align*}
+    A = VJV^{-1} =
+    \begin{pmatrix}
+        2 & -1 & 2 \\
+        2 & -1 & 0 \\
+        2 &  0 & 1
+    \end{pmatrix}
+    \begin{pmatrix}
+        1 & 1 &   \\
+          & 1 &   \\
+          &   & -1
+    \end{pmatrix}
+    \;\;
+    \frac{1}{4}
+    \begin{pmatrix}
+        -1 & 1 & 2 \\
+        -2 & -2 & 4 \\
+        2 & -2 & 0
+    \end{pmatrix}
+\end{align*}
+
+\medskip
+\medskip
+
+Nyní vypočteme vektorovou funkci $x(t)$:
+\begin{align*}
+    x(t) &=
+    \exp(tA) v(0) =
+    V \exp(tJ) V^{-1} v(0) =
+    \\
+    &=
+    \begin{pmatrix}
+        2 & -1 & 2 \\
+        2 & -1 & 0 \\
+        2 &  0 & 1
+    \end{pmatrix}
+    \begin{pmatrix}
+         \e^t & t\e^t &  \\
+              & \e^t  &  \\
+              &       & \e^{-t}
+    \end{pmatrix}
+    \;\;
+    \frac{1}{4}
+    \begin{pmatrix}
+        -1 & 1 & 2 \\
+        -2 & -2 & 4 \\
+        2 & -2 & 0
+    \end{pmatrix}
+    \begin{pmatrix}
+        1 \\ -1 \\ 1
+    \end{pmatrix}
+    =
+    \\
+    &=
+    \begin{pmatrix}
+        2 & -1 & 2 \\
+        2 & -1 & 0 \\
+        2 &  0 & 1
+    \end{pmatrix}
+    \begin{pmatrix}
+         \e^t & t\e^t &  \\
+              & \e^t  &  \\
+              &       & \e^{-t}
+    \end{pmatrix}
+    \begin{pmatrix}
+        0 \\ 1 \\ 1
+    \end{pmatrix}
+    =
+    \begin{pmatrix}
+        2t\e^t - \e^t + 2\e^{-t} \\
+        2t\e^t - \e^t \\
+        2t\e^t + \e^{-t}
+    \end{pmatrix}.
+\end{align*}
+
+\subsection{Výsledek}
+\begin{align*}
+    x(t) =
+    \begin{pmatrix}
+        2t\e^t - \e^t + 2\e^{-t} \\
+        2t\e^t - \e^t \\
+        2t\e^t + \e^{-t}
+    \end{pmatrix}.
+\end{align*}
+
+
+
+\section{Cvičení 9 – domácí úloha}
+\subsection{Zadání}
+Určete $\exp(A)$, kde
+\begin{align*}
+    A = \begin{pmatrix}
+        4 & 2 & -5 \\
+        6 & 4 & -9 \\
+        5 & 3 & -7
+    \end{pmatrix}.
+\end{align*}
+
+\subsection{Řešení}
+Opět začneme nalezením Jordanova tvaru matice:
+\begin{align*}
+    |A - \lambda E| = \begin{vmatrix}
+        4-\lambda & 2 & -5 \\
+        6 & 4-\lambda & -9 \\
+        5 & 3 & -7-\lambda
+    \end{vmatrix} = -\lambda^3 + \lambda^2 = -\lambda^2 (\lambda - 1)
+\end{align*}
+\begin{align*}
+    \lambda_{1,2} = 0, \;\; \lambda_3 = 1
+\end{align*}
+\begin{align*}
+    A \sim
+    \begin{pmatrix}
+        4 & 2 & -5 \\
+        6 & 4 & -9 \\
+        5 & 3 & -7
+    \end{pmatrix}
+    \sim
+    \begin{pmatrix}
+        4 & 2 & -5 \\
+        0 & 2 & -3 \\
+        5 & 3 & -7
+    \end{pmatrix}
+    \sim
+    \begin{pmatrix}
+        2 & 0 & -1 \\
+        0 & 2 & -3 \\
+    \end{pmatrix}
+    \rightarrow
+    \begin{pmatrix}
+        1 \\ 3 \\ 2
+    \end{pmatrix}
+\end{align*}
+\begin{align*}
+    \begin{pmatrix}[ccc|c]
+        4 & 2 & -5 & 1 \\
+        6 & 4 & -9 & 3 \\
+        5 & 3 & -7 & 2
+    \end{pmatrix}
+    \sim
+    \begin{pmatrix}[ccc|c]
+        4 & 2 & -5 & 1 \\
+        0 & 2 & -3 & 3 \\
+        5 & 3 & -7 & 2
+    \end{pmatrix}
+    \sim
+    \begin{pmatrix}[ccc|c]
+        2 & 0 & -1 & -1 \\
+        0 & 2 & -3 &  3 \\
+    \end{pmatrix}
+    \rightarrow
+    \begin{pmatrix}
+        -1 \\ 0 \\ -1
+    \end{pmatrix}
+\end{align*}
+\begin{align*}
+    A - 1E \sim
+    \begin{pmatrix}
+        3 & 2 & -5 \\
+        6 & 3 & -9 \\
+        5 & 3 & -8
+    \end{pmatrix}
+    \sim
+    \begin{pmatrix}
+        1 & 0 & -1 \\
+        5 & 3 & -8 \\
+        0 & 1 & -1
+    \end{pmatrix}
+    \sim
+    \begin{pmatrix}
+        1 & 0 & -1 \\
+        0 & 1 & -1
+    \end{pmatrix}
+    \rightarrow
+    \begin{pmatrix}
+        1 \\ 1 \\ 1
+    \end{pmatrix}
+\end{align*}
+\begin{align*}
+    \begin{pmatrix}[ccc|ccc]
+        1 & -1 & 1  &  1 & 0 & 0 \\
+        3 &  0 & 1  &  0 & 1 & 0 \\
+        2 & -1 & 1  &  0 & 0 & 1
+    \end{pmatrix}
+    \sim
+    \begin{pmatrix}[ccc|ccc]
+        1 & -1 & 1 & 1 & 0 & 0 \\
+        0 & 3 & -2 & -3 & 1 & 0 \\
+        0 & 1 & -1 & -2 & 0 & 1
+    \end{pmatrix}
+    \sim
+    \begin{pmatrix}[ccc|ccc]
+        1 & 0 & 0 & -1 & 0 & 1 \\
+        0 & 1 & 0 & 1 & 1 & -2 \\
+        0 & 0 & 1 & 3 & 1 & -3
+    \end{pmatrix}
+\end{align*}
+\begin{align*}
+    A = V J V^{-1} =
+    \begin{pmatrix}
+        1 & -1 & 1 \\
+        3 &  0 & 1 \\
+        2 & -1 & 1
+    \end{pmatrix}
+    \begin{pmatrix}
+        0 & 1 \\
+          & 0 \\
+          &   & 1 \\
+    \end{pmatrix}
+    \begin{pmatrix}
+        -1 & 0 & 1 \\
+         1 & 1 & -2 \\
+         3 & 1 & -3
+    \end{pmatrix}.
+\end{align*}
+
+\medskip
+\medskip
+
+Nyní vypočteme exponenciolu matice v Jordanově bázi:
+\begin{align*}
+    \exp(A) = V \exp(J) V^{-1} = 
+    \begin{pmatrix}
+        1 & -1 & 1 \\
+        3 &  0 & 1 \\
+        2 & -1 & 1
+    \end{pmatrix}
+    \begin{pmatrix}
+        1 & 1 \\
+          & 1 \\
+          &   & \e \\
+    \end{pmatrix}
+    \begin{pmatrix}
+        -1 & 0 & 1 \\
+         1 & 1 & -2 \\
+         3 & 1 & -3
+    \end{pmatrix}
+    =
+    \begin{pmatrix}
+        3\e - 1 & \e & -3\e + 1 \\
+        3\e & \e + 3 & -3\e - 3 \\
+        3\e - 1 & \e + 1  & -3\e
+    \end{pmatrix}.
+\end{align*}
+
+\subsection{Výsledek}
+\begin{align*}
+    \exp(A) =
+    \begin{pmatrix}
+        3\e - 1 & \e & -3\e + 1 \\
+        3\e & \e + 3 & -3\e - 3 \\
+        3\e - 1 & \e + 1  & -3\e
+    \end{pmatrix}.
+\end{align*}
+
+
+
+
+\section{Cvičení 10 – hodnocená úloha}
+\subsection{Zadání}
+Nechť
+\begin{align*}
+    u &= \begin{pmatrix}
+        1 \\ 1
+    \end{pmatrix},
+    \\
+    v &= \begin{pmatrix}
+        1 \\ -2
+    \end{pmatrix},
+    \\
+    w &= \begin{pmatrix}
+        -1 \\ 3
+    \end{pmatrix},
+    \\
+    B &= ( \begin{pmatrix}
+        1 \\ 2
+    \end{pmatrix},
+    \begin{pmatrix}
+        1 \\ 3
+    \end{pmatrix} ),
+    \\
+    S &= u \otimes v \otimes w,
+\end{align*}
+vyjádřete $S$ v kanonické bázi $K$ a v bázi $B$ vypočtete její prvek s indexy $2, 1, 2$.
+
+
+\subsection{Řešení}
+Nejprve si vyjádříme matici kontravariantní transformace:
+\begin{align*}
+    v &= R v'
+      = \Id{B}{K} v'
+      = \big( \, b_1 \, \big| \, b_2 \, \big) v'
+\end{align*}
+\begin{align*}
+    R &= \begin{pmatrix}
+        1 & 1 \\
+        2 & 3
+    \end{pmatrix}
+\end{align*}
+\begin{align*}
+    \begin{pmatrix}[cc|cc]
+        1 & 1 & 1 & 0 \\
+        2 & 3 & 0 & 1
+    \end{pmatrix}
+    \sim
+    \begin{pmatrix}[cc|cc]
+        1 & 1 & 1 & 0 \\
+        0 & 1 & -2 & 1
+    \end{pmatrix}
+    \sim
+    \begin{pmatrix}[cc|cc]
+        1 & 0 & 3 & -1 \\
+        0 & 1 & -2 & 1
+    \end{pmatrix}
+\end{align*}
+\begin{align*}
+    R^{-1} &= \begin{pmatrix}
+        3 & -1 \\
+        -2 & 1
+    \end{pmatrix}
+\end{align*}
+\begin{align*}
+    (R^{-1})^i_j &= 3 \delta^i_1 \delta_j^1 - 2 \delta^i_2 \delta_j^1
+            -\delta^i_1 \delta_j^2 + \delta^i_2 \delta_j^2
+\end{align*}
+
+\medskip
+\medskip
+
+Následně dosadíme do definice $S$:
+\begin{align*}
+    S^{ijk} &= u^i v^j w^k
+    = 1 (\delta_1^j - 2 \delta_2^j) (-\delta_1^k + 3 \delta_2^k)
+    = -\delta_1^j \delta_1^k + 2 \delta_2^j \delta_1^k
+    + 3 \delta_1^j \delta_2^k - 6 \delta_2^j \delta_2^k
+    = \begin{pmatrix}
+        -1 &  3 \\
+         2 & -6
+    \end{pmatrix}^{jk},
+\end{align*}
+
+\medskip
+\medskip
+
+A provedeme transformaci
+\begin{align*}
+    (S')^{212} &= (R^{-1})_i^2 \; (R^{-1})_j^1 \; (R^{-1})_k^2 \; S^{ijk} \\
+        &= (R^{-1})_i^2 \; (R^{-1})_j^1 \; (5\delta^j_1 - 10\delta^j_2) \\
+        &= (R^{-1})_i^2 \; (\delta^i_1 + \delta^i_2) \; 25 \\
+        &= (-2 + 1) 25 = -25.
+\end{align*}
+
+
+\subsection{Výsledek}
+\begin{align*}
+    S^{ijk}
+    = -\delta_1^j \delta_1^k + 2 \delta_2^j \delta_1^k
+    + 3 \delta_1^j \delta_2^k - 6 \delta_2^j \delta_2^k,
+\end{align*}
+\begin{align*}
+    (S')^{212} = -25.
+\end{align*}
+
+
+
+
+\section{Cvičení 10 – domácí úloha}
+\subsection{Zadání}
+Nalezte duální bázi $B$ k bázi
+\begin{align*}
+    B^* &= ( b^1,  b^2, b^3 ) \\[-.8em]
+    [b^1]_K &= \begin{pmatrix}
+        1 & 0 & 2
+    \end{pmatrix} \\[-.8em]
+    [b^2]_K &= \begin{pmatrix}
+        2 & 1 & 1
+    \end{pmatrix} \\[-.8em]
+    [b^3]_K &= \begin{pmatrix}
+        1 & 1 & 0
+    \end{pmatrix}.
+\end{align*}
+
+\subsection{Řešení}
+Duální báze k $B = (b_1, b_2, b_3)$ musí splňovat podmínku:
+\begin{align*}
+    b^i(b_j) = \delta^i_j.
+\end{align*}
+\medskip
+V kanonické bázi tuto podmínku lze také zapsat maticově:
+\begin{align*}
+    \begin{pmatrix}[c]
+        [b^1]_K \\ \hline
+        [b^2]_K \\ \hline
+        [b^3]_K
+    \end{pmatrix}
+    \begin{pmatrix}[c|c|c]
+        \; & \; & \;
+        \\
+        [b_1]_K &
+        [b_2]_K &
+        [b_3]_K
+        \\
+        \; & \; & \;
+    \end{pmatrix}
+    = E.
+\end{align*}
+\medskip
+Úloha je tedy ekvivalentní hledání inverzní matice:
+\begin{align*}
+    \begin{pmatrix}[ccc|ccc]
+        1 & 0 & 2  &  1 & 0 & 0 \\
+        2 & 1 & 1  &  0 & 1 & 0 \\
+        1 & 1 & 0  &  0 & 0 & 1
+    \end{pmatrix}
+    \sim
+    \begin{pmatrix}[ccc|ccc]
+        1 & 0 & 2  &  1 & 0 & 0 \\
+        0 & 1 &-1  &  0 &-1 & 2 \\
+        0 &-1 & 2  &  1 & 0 &-1
+    \end{pmatrix}
+    \sim
+    \begin{pmatrix}[ccc|ccc]
+        1 & 0 & 0  & -1 & 2 &-2 \\
+        0 & 1 & 0  &  1 &-2 & 3 \\
+        0 & 0 & 1  &  1 &-1 & 1
+    \end{pmatrix}
+\end{align*}
+
+\subsection{Výsledek}
+\begin{align*}
+    B = (
+        \begin{pmatrix}
+            -1 & 2 & -2
+        \end{pmatrix}^T
+        ,
+        \begin{pmatrix}
+            1 & -2 & 3
+        \end{pmatrix}^T
+        ,
+        \begin{pmatrix}
+            1 & -1 & 1
+        \end{pmatrix}^T
+    ).
+\end{align*}
+
+\endgroup
+
+\end{document}

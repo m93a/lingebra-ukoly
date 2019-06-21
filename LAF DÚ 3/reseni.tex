@@ -1,0 +1,796 @@
+%!TEX program = xelatex
+
+\documentclass[]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{mathtools}
+\usepackage{bm}
+\usepackage{bbold}
+\usepackage{nameref}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage[a4paper, total={6in, 9.5in}]{geometry}
+\usepackage{fancyhdr}
+\usepackage{xfrac}
+\usepackage{tensor}
+
+\makeatletter
+\renewcommand*\env@matrix[1][*\c@MaxMatrixCols c]{%
+  \hskip -\arraycolsep
+  \let\@ifnextchar\new@ifnextchar
+  \array{#1}}
+\makeatother
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\leftmark}
+\rhead{Michl Grňo}
+\cfoot{\thepage}
+
+
+\renewcommand{\sectionmark}[1]{\markboth{#1}{}}
+
+
+\renewcommand{\d}[1][]{\ensuremath{\,\mathrm{d}{#1}}}
+\newcommand{\dd}[3][]{\ensuremath{\frac{\d^{#1} {#2}}{\d{#3}^{#1}}}}
+\newcommand{\pd}[3][]{\ensuremath{\frac{\partial^{#1} {#2}}{\partial {#3}^{#1}}}}
+
+\renewcommand{\U}[1]{\,\mathrm{#1}}
+
+\newcommand{\konst}{\,\mathrm{konst.}}
+\newcommand{\e}{\mathrm{e}}
+
+\newcommand{\Ker}{\mathrm{Ker}\;}
+\renewcommand{\Im}{\mathrm{Im}\;}
+\newcommand{\Tr}{\mathrm{Tr}\;}
+
+\newcommand{\diag}[2]{\mathrm{diag}_{#1}(#2)}
+\newcommand{\Id}[2]{\ensuremath{[\mathrm{Id}]_{#1}^{#2}}}
+
+\newcommand{\kanon}[1]{\ensuremath{\left[#1\right]_\mathrm{K}}}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcommand{\mat}[1]{\begin{pmatrix}#1\end{pmatrix}}
+
+\newcommand{\recip}[1]{\frac{1}{#1}}
+\newcommand{\recipsqrt}[1]{\frac{1}{\sqrt{#1}}}
+\newcommand{\x}{\times}
+  
+  
+
+
+
+
+\title{Domácí práce na LAF II.}
+\date{15. 6. 2019}
+\author{Michal Grňo}
+
+\begin{document}
+
+\maketitle
+
+\begingroup
+\addtolength{\jot}{1em}
+
+
+\section{Cvičení 5 – hodnocená úloha}
+\subsection{Zadání}
+Najděte singulární rozklad a pseudoinverzi matice $A = \mat{1&-1\\0&0\\-2&2}$.
+
+\subsection{Řešení}
+Nejprve vypočteme matici $A^+A$ a nalezneme její diagonální tvar:
+\begin{align*}
+  A^+A = \mat{1&0&-2\\-1&0&2}\mat{1&-1\\0&0\\-2&2} = \mat{5&-5\\-5&5},
+\end{align*}
+\begin{align*}
+  |A^+A - \lambda E| = \begin{vmatrix}
+      5 - \lambda & -5 \\
+      -5 & 5 - \lambda
+  \end{vmatrix}
+  = \lambda (\lambda - 10),
+\end{align*}
+\begin{align*}
+  \Ker(A^+A) &= k \mat{1 \\ 1}, \;\; k \in \mathbb{R}, \\
+  \Ker(A^+A - 10E) &= k \mat{1 \\ -1}, \;\; k \in \mathbb{R}.
+\end{align*}
+Z toho máme matice $\Sigma$ a $V$:
+\begin{align*}
+  \Sigma = \mat{\sqrt{10} & 0 \\ 0 & 0 \\ 0 & 0},
+  \hspace{2em}
+  V = \recipsqrt{2} \mat{1 & 1 \\ -1 & 1}.
+\end{align*}
+Dále vypočteme první sloupec matice $U$ a zbytek doplníme na ON bázi:
+\begin{align*}
+  u_1
+  \;=\; \recip{\sigma_1} A v_1
+  \;=\; \recip{2\sqrt{5}} \mat{1&-1\\0&0\\-2&2} \mat{1\\-1}
+  \;=\; \recipsqrt{5} \mat{1\\0\\-2},
+\end{align*}
+\begin{align*}
+  u_2 = \recipsqrt{5} \mat{2\\0\\1},
+  \hspace{2em}
+  u_3 = \mat{0\\1\\0},
+\end{align*}
+\begin{align*}
+  U = \recipsqrt{5} \mat{1&2&0 \\ 0&0&\sqrt{5} \\ -2&1&0}.
+\end{align*}
+Singulární rozklad matice $A = U\Sigma V^+$ je tedy:
+\begin{align*}
+  A =
+  \recipsqrt{5} \mat{1&2&0 \\ 0&0&\sqrt{5} \\ -2&1&0}
+  \hspace{.5em}
+  \mat{\sqrt{10} & 0 \\ 0 & 0 \\ 0 & 0}
+  \hspace{.7em}
+  \recipsqrt{2} \mat{1 & -1 \\ 1 & 1}.
+\end{align*}
+Pseudoinverze $A$ je potom
+\begin{align*}
+  A^\dagger &= V \Sigma^\dagger U^+ \\
+  &= \recipsqrt{5} \mat{1&1\\-1&1}
+  \hspace{.7em}
+  \recipsqrt{10} \mat{1&0&0\\0&0&0}
+  \hspace{.7em}
+  \recipsqrt{2} \mat{1&0&-2\\2&0&1\\0&\sqrt{5}&0} \\
+  &= \recip{10} \mat{1&0&-2\\-1&0&2} \\
+  &= \recip{10} \; A^+.
+\end{align*}
+
+
+
+\section{Cvičení 5 – procvičovací úloha 1}
+\subsection{Zadání}
+Najděte polární rozklad reálné matice $A=\mat{a&-b\\b&a}$.
+
+\subsection{Řešení}
+Nejprve nalezneme singulární rozklad:
+\begin{align*}
+  A^+A = \mat{a^2 + b^2 & 0 \\ 0 & a^2 + b^2}
+\end{align*}
+\begin{align*}
+  \sigma_{1,2} = \sqrt{a^2 + b^2}
+\end{align*}
+\begin{align*}
+  V = \mat{1&0\\0&1}
+  \hspace{2em}
+  U = \recipsqrt{a^2 + b^2} \mat{a & -b \\ b & a}
+\end{align*}
+Následně vyjádříme polární rozklad
+\begin{align*}
+  A = U \Sigma V^+ = \underbrace{UV^+}_W \; \underbrace{V \Sigma V^+}_P = \underbrace{U}_W \underbrace{\Sigma}_P
+\end{align*}
+\begin{align*}
+  W = \recipsqrt{a^2 + b^2} \mat{a & -b \\ b & a}
+  \hspace{2em}
+  P = \mat{ \sqrt{a^2 + b^2} & 0 \\ 0 & \sqrt{a^2 + b^2} }
+\end{align*}
+
+
+\section{Cvičení 5 – procvičovací úloha 2}
+\subsection{Zadání}
+Ukažte, že matice $A = \mat{2 & 3 \\ 0 & 2}$ není diagonalizovatelná a proveďte její singulární a polární rozklad.
+
+\subsection{Řešení}
+Snadno demonstrujeme, že $A$ má jedno číslo s algebraickou násobností~2 a geometrickou násobností~1:
+\begin{align*}
+  |A-\lambda E| =
+  \begin{vmatrix}
+    2-\lambda & 3 \\ 0 & 2-\lambda
+  \end{vmatrix}
+  = (\lambda - 2)^2,
+\end{align*} 
+\begin{align*}
+  \Ker(A-\lambda E) =
+  \Ker\mat{0&3\\0&0} =
+  \langle\mat{1\\0}\rangle.
+\end{align*}
+Vypočteme tedy singulární rozklad:
+\begin{align*}
+  A^+A = \mat{4&6\\6&13}
+\end{align*}
+\begin{align*}
+  |A^+A - \lambda E| = (\lambda-16)(\lambda-1)
+\end{align*}
+\begin{align*}
+  \Ker(A^+A-E)
+  = \Ker\mat{3&6\\6&12}
+  = \Ker\mat{1&2\\0&0}
+  = \langle\mat{2\\-1}\rangle
+\end{align*}
+\begin{align*}
+  \Ker(A^+A-16E)
+  = \Ker\mat{-12&6\\6&-3}
+  = \Ker\mat{2&-1\\0&0}
+  = \langle\mat{1\\2}\rangle
+\end{align*}
+\begin{align*}
+  \Sigma = \mat{4&0\\0&1}
+  \hspace{2em}
+  V = \recipsqrt{5} \mat{1&2\\2&-1}
+\end{align*}
+\begin{alignat*}{2}
+  u_1 &= \recip{4} \mat{2&3\\0&2} \;\; \recipsqrt{5} \mat{1\\2} & \;&=\; \recipsqrt{5} \mat{2\\1} \\
+  u_2 &= \recip{1} \mat{2&3\\0&2} \;\; \recipsqrt{5} \mat{2\\-1} & \;&=\; \recipsqrt{5} \mat{1\\-2}
+\end{alignat*}
+\begin{align*}
+  U = \recipsqrt{5} \mat{2&1\\1&-2}
+\end{align*}
+\begin{align*}
+  A = U \Sigma V^+.
+\end{align*}
+Nakonec vypočteme polární rozklad:
+\begin{align*}
+  W = UV^+ = \recip{5} \mat{2&1\\1&-2} \mat{1&2\\2&-1} = \recip{5} \mat{4&3\\-3&4}
+\end{align*}
+\begin{align*}
+  P = V \Sigma V^+ = \recip{5} \mat{1&2\\2&-1} \mat{4&0\\0&1} \mat{1&2\\2&-1} = \mat{8&6\\6&17}
+\end{align*}
+
+\subsection{Výsledek}
+\begin{align*}
+  \mat{2&3\\0&2}
+  \;\;=\;\; \underbrace{\recip{5}\mat{4&3\\-3&4}}_W \; \underbrace{\recip{5}\mat{8&6\\6&17}}_P
+  \;\;=\;\; \underbrace{\recipsqrt{5}\mat{2&1\\1&-2}}_U \; \underbrace{\mat{4&0\\0&1}}_\Sigma \; \underbrace{\recipsqrt{5} \mat{1&2\\2&-1}}_{V^+}.
+\end{align*}
+
+
+\section{Cvičení 5 – procvičovací úloha 3}
+\subsection{Zadání}
+Mějme matici $X \in \mathbb{R}^{m \x n}$. Jak vypadá pseudoinverze blokové matice $A = \mat{X&0\\0&0}$, resp. $\mat{0&X\\0&0}$, jejíž rozměry jsou $(m+p)\x(n+q)$?
+
+\subsection{Řešení}
+Pro rozlišení rozměrů blokových matic budeme používat spodní indexy: například značení $0_{a \x b}$ znamená nulovou matici o $a$ řádcích a $b$ sloupcích. Začneme singulárním rozkladem blokově symetrické varianty $A = \widetilde{U} \widetilde{\Sigma} \widetilde{V}^+$:
+\begin{align*}
+  A = \mat{
+    X_{m \x n} & 0_{m \x q} \\
+    0_{p \x n} & 0_{p \x q}
+  },
+\end{align*}
+\begin{align*}
+  A^+ A =
+  \mat{
+    X^+_{n \x m} & 0_{n \x p} \\
+    0_{q \x m} & 0_{q \x p}
+  }
+  \mat{
+    X_{m \x n} & 0_{m \x q} \\
+    0_{p \x n} & 0_{p \x q}
+  }
+  =
+  \mat{
+    (X^+X)_{n \x n} & 0_{n \x q} \\
+    0_{q \x n} & 0_{q \x q}
+  },
+\end{align*}
+\begin{align*}
+  |A^+A - \lambda E| \; &= \;
+  \begin{vmatrix}
+    (X^+X - \lambda E)_{n \x n} & 0_{n \x q} \\
+    0_{q \x n} & -\lambda E_{q \x q}
+  \end{vmatrix} \\
+  \; &= \; (-1)^q \;\; \lambda^q \;\; |X^+X - \lambda E|.
+\end{align*}
+Je zřejmé, že všechna vlastní čísla $X^+X$ budou i vlastními čísly $A^+A$, tato matice bude mít navíc $q$-násobné vlastní číslo 0. Prvních $n$ vlastních vektorů $A^+A$ bude ve tvaru $\widetilde{v_i} = \mat{ (v_i)_{n \x 1} \\ 0_{q \x 1} }$, kde $v_i$ jsou vlastní vektory $X^+X$, zbylé budou ve tvaru $\widetilde{v_i} = \mat{ 0_{n \x 1} \\ (b_i)_{q \x 1}}$, kde $b_i$ je ON báze $\mathbb{C}^q$. Nechť je nyní $X = U \Sigma V^+$ singulární rozklad matice $X$ a $B = \begin{pmatrix}[c|c|c]
+  b_1 & ... & b_q
+\end{pmatrix}$, potom:
+\begin{align*}
+  \widetilde{\Sigma}
+  = \mat{
+    \Sigma_{m \x n} & 0_{m \x q} \\
+    0_{p \x n} & 0_{p \x q}
+  },
+  \hspace{2em}
+  \widetilde{V}
+  = \mat{
+    V_{n \x n} & 0_{n \x q} \\
+    0_{q \x n} & B_{q \x q}
+  }.
+\end{align*}
+Dále jde snadno ověřit, že lze zvolit v $\mathbb{C}^{(m+p)}$ takovou ON bázi, aby prvních $m$ sloupců matice $\widetilde{U}$ mělo tvar $\widetilde{u_i} = \mat{(u_i)_{m \x 1} \\ 0_{p \x 1}}$, potom dostáváme
+\begin{align*}
+  \widetilde{U} = \mat{
+    U_{m \x m} & 0_{m \x p} \\
+    0_{p \x m} & C_{p \x p}
+  },
+\end{align*}
+kde $C$ je unitární matice.
+
+\medskip
+
+Pseudoinverzní maticí k $A$ tedy bude:
+\begin{align*}
+  A^\dagger
+  &= \widetilde{V}^+ \widetilde{\Sigma}^\dagger \widetilde{U} \\
+  &= \mat{
+    V^+_{n \x n} & 0_{n \x q} \\
+    0_{q \x n} & B^+_{q \x q}
+  }
+  \mat{
+    \Sigma^\dagger_{n \x m} & 0_{n \x p} \\
+    0_{q \x m} & 0_{q \x p}
+  }
+  \mat{
+    U_{m \x m} & 0_{m \x p} \\
+    0_{p \x m} & C_{p \x p}
+  } \\
+  &= \mat{
+    (V^+ \Sigma^\dagger U)_{n \x m} & 0_{n \x p} \\
+    0_{q \x m} & 0_{q \x p}
+  } \\
+  &= \mat{
+    (X^\dagger)_{n \x m} & 0_{n \x p} \\
+    0_{q \x m} & 0_{q \x p}
+  }.
+\end{align*}
+V případě, že by $X$ byla čtvercová regulární $n \x n$ matice, platilo by $X^\dagger = X^{-1}$, tedy:
+\begin{align*}
+  A^\dagger
+  = \mat{
+    X_{n \x n} & 0_{n \x q} \\
+    0_{p \x n} & 0_{p \x q}
+  }^\dagger
+  = \mat{
+    (X^{-1})_{n \x n} & 0_{n \x p} \\
+    0_{q \x n} & 0_{q \x p}
+  }.
+\end{align*}
+
+\vspace{3em}
+
+Nyní vyšetříme blokově nesymetrickou variantu. Nejprve budeme předpokládat, že $p \geq q$, diskusi pro $p < q$ provedeme na konci.
+\begin{align*}
+  A = \mat{
+    0_{m \x q} & X_{m \x n} \\
+    0_{p \x q} & 0_{p \x n}
+  },
+\end{align*}
+\begin{align*}
+  A^+A = \mat{
+    0_{q \x m} & 0_{q \x p} \\
+    X^+_{n \x m} & 0_{n \x p}
+  }
+  \mat{
+    0_{m \x q} & X_{m \x n} \\
+    0_{p \x q} & 0_{p \x n}
+  }
+  = \mat{
+    0_{q \x q} & 0_{q \x n} \\
+    0_{n \x q} & (X^+X)_{n \x n}
+  }.
+\end{align*}
+Nyní si opět vyjádříme singulární rozklad $X = U \Sigma V^+$. Matice $\widetilde{\Sigma}$ a $\widetilde{V}$ najdeme způsobem analogickým k předchozí části, pouze použijeme nestandardní řazení singulárních hodnot v $\widetilde{\Sigma}$:
+\footnote{
+  Místo standardního tvaru
+  $\widetilde{\Sigma} = \diag{(m+p) \x (n+q)}{\sigma_1, \sigma_2, ..., 0, ...}$
+  volíme tvar
+  $\diag{}{ \underbrace{0, ..., 0}_q, \sigma_1, \sigma_2, ...}$. Díky tomu bude monžné blokově násobit matice $A$ a $V$. Ve vyjádření blokového tvaru $\widetilde{\Sigma}$ bylo využito předpokladu, že $p \geq q$, jinak by byla diagonála "moc dlouhá".
+}
+\begin{align*}
+  \widetilde{\Sigma} = \mat{
+    0_{q \x q} & 0_{q \x n} \\
+    0_{m \x q} & \Sigma_{m \x n} \\
+    0_{(p-q) \x q} & 0_{(p-q) \x n}
+  },
+  \hspace{2em}
+  \widetilde{V}
+  = \mat{
+    B_{q \x q} & 0_{q \x n} \\
+    0_{n \x q} & V_{n \x n}
+  }.
+\end{align*}
+Pro $i \in \{1, ... s\}$, kde $s$ je počet singulárních hodnot matice $X$, platí:
+\begin{align*}
+  u_i &= \recip{\sigma_i} X v_i,
+  \\
+  \widetilde{u}_{q+i} &= \recip{\sigma_i} A \widetilde{v}_{q+i} \\
+  &= \recip{\sigma_i}
+  \mat{
+    0_{m \x q} & X_{m \x n} \\
+    0_{p \x q} & 0_{p \x n}
+  }
+  \mat{
+    0_{q \x 1} \\ (v_i)_{n \x 1}
+  } \\
+  &=
+  \mat{
+    (\recip{\sigma_i} X v_i)_{m \x 1} \\
+    0_{p \x 1}
+  }
+  = \mat{
+    (u_i)_{m \x 1} \\
+    0_{p \x 1}
+  }.
+\end{align*}
+Protože $(u_1, ..., u_m)$ je ON báze $\mathbb{C}^m$, můžeme použít vzorec $\widetilde{u}_{q+i} = \mat{
+  (u_i)_{m \x 1} \\
+  0_{p \x 1}
+}$ pro hodnoty $i~\in~\{ 1, ..., m \}$, čímž získáme ON bázi $m$-rozměrného podprostoru. Zbývá nám ještě „pokrýt“ $p$-rozměrný podprostor. Zvolíme si tedy libovolnou ON bázi $B = (b_1, ..., b_p)$ v $\mathbb{C}^p$ a její vektory použijeme jako sloupce matic
+$
+  C =
+  \begin{pmatrix}[c|c|c]
+    b_1 & ... & b_q
+  \end{pmatrix}, \;
+  D =
+  \begin{pmatrix}[c|c|c]
+    b_{q+1} & ... & b_p
+  \end{pmatrix}
+$.
+Matici $\widetilde{U}$ potom lze zapsat ve tvaru:
+\begin{align*}
+  \widetilde{U} =
+  \mat{
+    0_{m \x q} & U_{m \x m} & 0_{m \x (p-q)} \\
+    C_{p \x q} & 0_{p \x m} & D_{p \x (p-q)}
+  }.
+\end{align*}
+Nyní známe singulární rozklad matice $A$ a můžeme nalézt její pseudoinverzi:
+\begin{align*}
+  A^\dagger
+  &= \widetilde{V} \widetilde{\Sigma}^\dagger \widetilde{U}^+ \\
+  &= \mat{
+    B_{q \x q} & 0_{q \x n} \\
+    0_{n \x q} & V_{n \x n}
+  }
+  \mat{
+    0_{q \x q} & 0_{q \x m} & 0_{q \x (p-q)} \\
+    0_{n \x q} & \Sigma^\dagger_{n \x m} & 0_{n \x (p-q)}
+  }
+  \mat{
+    0_{q \x m} &    C^+_{q \x p} \\
+    U^+_{m \x m} &    0_{m \x p} \\
+    0_{(p-q) \x m} &    D^+_{(p-q) \x p} \\
+  } \\
+  &= \mat{
+    0_{q \x m} & 0_{q \x p} \\
+    (V \Sigma U^+)_{n \x m} & 0_{n \x p}
+  }
+  = \mat{
+    0_{q \x m} & 0_{q \x p} \\
+    X^\dagger_{n \x m} & 0_{n \x p}
+  }.
+\end{align*}
+
+V případě, že by bylo $p<q$ by se postupovalo ekvivalentně, pouze $\widetilde{\Sigma}$ a $\widetilde{U}$ by místo tří „blokových řádků“ měly „tři blokové sloupce“. Tento postup vede na stejný výsledek.
+
+\bigskip
+\bigskip
+\pagebreak
+
+\section{Cvičení 5 – domácí úloha}
+\subsection{Zadání}
+Určete singulární rozklad, polární rozklad a pseudoinverzi matice $A = \mat{
+  1 & -1 & 0 \\
+  -1 & 0 & 1 \\
+  0 & 1 & -1
+}$. Najděte aproximativní řešení soustavy $Ax = b$ s nejmenší normou pro $b = \mat{1 & 1 & 1}^T$.
+
+\subsection{Řešení}
+Začneme hledáním singulárního rozkladu:
+\begin{align*}
+  A^+A = A^2 = \mat{
+    2 & -1 & -1 \\
+    -1 & 2 & -1 \\
+    -1 & -1 & 2
+  },
+\end{align*}
+\begin{align*}
+  |A^+A - \lambda E| = -\lambda(\lambda-3)^2,
+\end{align*}
+\begin{align*}
+  \Ker(A^+A) &= \Ker\mat{1&0&-1\\&1&-1} = \langle\mat{1\\1\\1}\rangle, \\
+  \Ker(A^+A - 3E) &= \Ker\mat{1&1&1} = \langle\mat{1\\-1\\0},\mat{1\\1\\-2}\rangle,
+\end{align*}
+\begin{align*}
+  \Sigma = \mat{
+    \sqrt{3} & 0 & 0 \\
+    0 & \sqrt{3} & 0 \\
+    0 & 0 & 0
+  },
+  \hspace{2em}
+  V =
+  \recipsqrt{6}
+  \mat{
+    \sqrt{3} & 1 & \sqrt{2} \\
+    -\sqrt{3} & 1 & \sqrt{2} \\
+    0 & -2 & \sqrt{2}
+  },
+\end{align*}
+\begin{alignat*}{5}
+  u_1
+  &= \recip{\sigma_1} A v_1 &
+  &= \recipsqrt{6} &
+  &\mat{
+    1 & -1 & 0 \\
+    -1 & 0 & 1 \\
+    0 & 1 & -1
+  } &
+  &\mat{1 \\ -1 \\ 0} &
+  &= \recipsqrt{6}
+  \mat{2\\-1\\-1},
+  \\
+  u_2
+  &= \recip{\sigma_2} A v_2 &
+  &= \recip{3\sqrt{6}} &
+  &\mat{
+    1 & -1 & 0 \\
+    -1 & 0 & 1 \\
+    0 & 1 & -1
+  } &
+  &\mat{1 \\ 1 \\ -2} &
+  &= \recipsqrt{2}
+  \mat{0\\-1\\1},
+\end{alignat*}
+\begin{align*}
+  u_3 = u_2 \x u_1 = \recipsqrt{3} \mat{1\\1\\1},
+\end{align*}
+\begin{align*}
+  U = \recipsqrt{6} \mat{
+    2 & 0 & \sqrt{2} \\
+    -1 & -\sqrt{3} & \sqrt{2} \\
+    -1 & \sqrt{3} & \sqrt{2}
+  }.
+\end{align*}
+\begin{align*}
+  A = \underbrace{
+    \recipsqrt{6}
+    \mat{
+      2 & 0 & \sqrt{2} \\
+      -1 & -\sqrt{3} & \sqrt{2} \\
+      -1 & \sqrt{3} & \sqrt{2}
+    }
+  }_U
+  \;\;\;
+  \underbrace{\mat{
+    \sqrt{3} & 0 & 0 \\
+    0 & \sqrt{3} & 0 \\
+    0 & 0 & 0
+  }}_\Sigma
+  \;\;\;
+  \underbrace{
+    \recipsqrt{6}
+    \mat{
+      \sqrt{3} & -\sqrt{3} & 0 \\
+      1 & 1 & -2 \\
+      \sqrt{2} & \sqrt{2} & \sqrt{2}
+    }
+  }_{V^+}
+  .
+\end{align*}
+Pokračujeme vyjádřením polárního rozkladu:
+\begin{align*}
+  W = UV^+ = \recip{6} \mat{
+    2 & 0 & \sqrt{2} \\
+    -1 & -\sqrt{3} & \sqrt{2} \\
+    -1 & \sqrt{3} & \sqrt{2}
+  }
+  \mat{
+    \sqrt{3} & -\sqrt{3} & 0 \\
+    1 & 1 & -2 \\
+    \sqrt{2} & \sqrt{2} & \sqrt{2}
+  }
+  =
+  \recip{3}
+  \mat{
+    1+\sqrt{3} & 1-\sqrt{3} & 1 \\
+    1-\sqrt{3} & 1 & 1+\sqrt{3} \\
+    1 & 1+\sqrt{3} & 1-\sqrt{3}
+  }
+\end{align*}
+\begin{align*}
+  P = V \Sigma V^+ =
+  \recip{6}
+  \mat{
+    \sqrt{3} & 1 & \sqrt{2} \\
+    -\sqrt{3} & 1 & \sqrt{2} \\
+    0 & -2 & \sqrt{2}
+  }
+  \mat{
+    \sqrt{3} & 0 & 0 \\
+    0 & \sqrt{3} & 0 \\
+    0 & 0 & 0
+  }
+  \mat{
+    \sqrt{3} & -\sqrt{3} & 0 \\
+    1 & 1 & -2 \\
+    \sqrt{2} & \sqrt{2} & \sqrt{2}
+  }
+  =
+  \recipsqrt{3}
+  \mat{
+    2 & -1 & -1 \\
+    -1 & 2 & -1 \\
+    -1 & -1 & 2
+  }
+\end{align*}
+\begin{align*}
+  A =
+  \underbrace{
+    \recip{3}
+    \mat{
+      1+\sqrt{3} & 1-\sqrt{3} & 1 \\
+      1-\sqrt{3} & 1 & 1+\sqrt{3} \\
+      1 & 1+\sqrt{3} & 1-\sqrt{3}
+    }
+  }_W
+  \;\;\;
+  \underbrace{
+    \recipsqrt{3}
+    \mat{
+      2 & -1 & -1 \\
+      -1 & 2 & -1 \\
+      -1 & -1 & 2
+    }
+  }_P
+\end{align*}
+Dále vypočteme pseudoinverzi:
+\begin{align*}
+  A^\dagger
+  &= V \Sigma^\dagger U^+ \\
+  &= \recip{6\sqrt{3}}
+  \mat{
+    \sqrt{3} & 1 & \sqrt{2} \\
+    -\sqrt{3} & 1 & \sqrt{2} \\
+    0 & -2 & \sqrt{2}
+  }
+  \mat{1&0&0\\0&1&0\\0&0&0}
+  \mat{
+    2 & -1 & -1 \\
+    0 & -\sqrt{3} & \sqrt{3} \\
+    \sqrt{2} & \sqrt{2} & \sqrt{2}
+  } \\
+  &=
+  \recip{3}
+  \mat{
+    1 & -1 & 0 \\
+    -1 & 0 & 1 \\
+    0 & 1 & -1
+  }.
+\end{align*}
+Nakonec vypočteme aproximativní řešení rovnice:
+\begin{align*}
+  x = A^\dagger b = \recip{3}
+  \mat{
+    1 & -1 & 0 \\
+    -1 & 0 & 1 \\
+    0 & 1 & -1
+  }
+  \mat{1\\1\\1}
+  = \mat{0\\0\\0}.
+\end{align*}
+
+
+
+\section{Cvičení 5 – rozšiřující úloha 2}
+\subsection{Zadání}
+Mějme matici $A \in \mathbb{R}^{m \x n}$, ukažte, že:
+\begin{enumerate}
+  \item matice $A A^\dagger$ je matice projekce na $\Im A$,
+  \item matice $A^\dagger A$ je matice projekce na $\Im A^T$,
+  \item matice $E - A^\dagger A$ je matice projekce na $\Ker A$.
+\end{enumerate}
+
+\subsection{Řešení}
+Nechť matice $A$ má $s$ singulárních čísel a její singulární rozklad je $A = U \Sigma V^+$, potom $A^\dagger = V \Sigma^\dagger U^+$. Zároveň si zavedeme ON báze $U \subset \mathbb{R}^m, V \subset \mathbb{R}^n$ takové, aby $\Id{V}{\mathrm{K}} = V$ a $\Id{U}{\mathrm{K}} = U$. Kdy budeme mluvit o matici a kdy o bázi, bude zřejmé z kontextu. Nakonec si zavedeme zobrazení $\mathbb{A}: \mathbb{R}^n \rightarrow \mathbb{R}^m$ takové, aby $[\mathbb{A}]_\mathrm{K}^\mathrm{K} = A$, projekci do podprostoru $X$ si označíme $\mathbb{P}_X$ a její matici v kanonické bázi označíme $P_X$.
+
+\medskip
+
+Protože platí
+\begin{align*}
+  [\mathbb{A}]_\mathrm{K}^\mathrm{K} = A = U \Sigma V^+ = \Id{U}{\mathrm{K}} \Sigma \Id{\mathrm{K}}{V},
+\end{align*}
+musí být $\Sigma$ vyjádřením $\mathbb{A}$ v bázích $V, U$:
+\begin{align*}
+  [\mathbb{A}]_V^U = \Sigma.
+\end{align*}
+
+Nyní si vyjádříme obraz $\mathbb{A}$:
+\begin{align*}
+  [\Im\mathbb{A}]^U = \Im \Sigma =
+  \left\langle
+    \underbrace{
+      \mat{1 \\ 0 \\ \vdots},
+      \mat{0 \\ 1 \\ \vdots},
+      \dots
+    }_s
+  \right\rangle.
+\end{align*}
+Matice projekce na $\Im\mathbb{A}$ bude tedy mít v bázi $U$ jednoduchý tvar:
+\begin{align*}
+  [\mathbb{P}_{\Im\mathbb{A}}]_U^U =
+  \mat{
+    \underbrace{
+      \begin{matrix}
+        1 & 0 & \dots \\
+        0 & 1 & \dots \\
+        \vdots & \vdots
+      \end{matrix}
+    }_s
+    &
+    \begin{matrix}
+      0 & \dots \\
+      0 & \dots \\
+      \vdots
+    \end{matrix}
+  }.
+\end{align*}
+Vyjádříme-li si teď $A A^\dagger$ pomocí zavedených symbolů, bude vše zřejmé:
+\begin{align*}
+  A A^\dagger
+  &= (U \Sigma V^+)(V \Sigma^\dagger U^+) = U \Sigma \Sigma^\dagger U^+ \\
+  &= U \mat{
+    \underbrace{
+      \begin{matrix}
+        1 & 0 & \dots \\
+        0 & 1 & \dots \\
+        \vdots & \vdots
+      \end{matrix}
+    }_s
+    &
+    \begin{matrix}
+      0 & \dots \\
+      0 & \dots \\
+      \vdots
+    \end{matrix}
+  } U^+ \\
+  &= \Id{U}{\mathrm{K}} [\mathbb{P}_{\Im\mathbb{A}}]_U^U \Id{\mathrm{K}}{U}
+  = [\mathbb{P}_{\Im\mathbb{A}}]_K^K = P_{\Im A}.
+\end{align*}
+
+Stejným způsobem, jakým jsme si zavedli zobrazení $\mathbb{A}: \mathbb{R}^n \rightarrow \mathbb{R}^m$, můžeme zavést i zobrazení $\mathbb{A}^T: \mathbb{R}^m \rightarrow \mathbb{R}^n$.
+\begin{align*}
+  [\mathbb{A}^T]_\mathrm{K}^\mathrm{K}
+  = A^T = (U \Sigma V^+)^T
+  = V \Sigma^T U^+,
+\end{align*}
+\begin{align*}
+  [\Im \mathbb{A}^T]^V = \Im \Sigma^T = \left\langle
+  \underbrace{
+    \mat{1 \\ 0 \\ \vdots},
+    \mat{0 \\ 1 \\ \vdots},
+    \dots
+  }_s
+\right\rangle,
+\end{align*}
+\begin{align*}
+  [\mathbb{P}_{\Im\mathbb{A}^T}]_V^V =
+  \mat{
+    \underbrace{
+      \begin{matrix}
+        1 & 0 & \dots \\
+        0 & 1 & \dots \\
+        \vdots & \vdots
+      \end{matrix}
+    }_s
+    &
+    \begin{matrix}
+      0 & \dots \\
+      0 & \dots \\
+      \vdots
+    \end{matrix}
+  }.
+\end{align*}
+\begin{align*}
+  A^\dagger A
+  &= (V \Sigma^\dagger U^+)(U \Sigma V^+)
+  = V \Sigma^\dagger \Sigma V^+
+  = V \Sigma^T (\Sigma^\dagger)^T V^+ \\
+  &= \Id{V}{\mathrm{K}} [\mathbb{P}_{\Im\mathbb{A}^T}]_V^V \Id{\mathrm{K}}{V}
+  = [\mathbb{P}_{\Im\mathbb{A}^T}]_K^K
+  = P_{\Im A^T}.
+\end{align*}
+
+\medskip
+
+Poslední tvrzení triviálně vyplývá z
+\begin{align*}
+  \Ker A = (\Im A^T)^\perp,
+\end{align*}
+\begin{align*}
+  P_{X^\perp} = E - P_X.
+\end{align*}
+\begin{align*}
+  P_{\Ker A} = P_{(\Im A^T)^\perp} = E - P_{\Im A^T} = E - A^\dagger A.
+\end{align*}
+
+
+
+\endgroup
+
+\end{document}

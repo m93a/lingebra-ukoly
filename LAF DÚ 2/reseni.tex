@@ -1,0 +1,338 @@
+%!TEX program = xelatex
+
+\documentclass[]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{bm}
+\usepackage{bbold}
+\usepackage{nameref}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage[a4paper, total={6in, 9.5in}]{geometry}
+\usepackage{fancyhdr}
+\usepackage{xfrac}
+\usepackage{tensor}
+
+\makeatletter
+\renewcommand*\env@matrix[1][*\c@MaxMatrixCols c]{%
+  \hskip -\arraycolsep
+  \let\@ifnextchar\new@ifnextchar
+  \array{#1}}
+\makeatother
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\leftmark}
+\rhead{Michl Grňo}
+\cfoot{\thepage}
+
+
+\renewcommand{\sectionmark}[1]{\markboth{#1}{}}
+
+
+\renewcommand{\d}[1][]{\ensuremath{\,\mathrm{d}{#1}}}
+
+\newcommand{\dd}[3][]{\ensuremath{\frac{\d^{#1} {#2}}{\d{#3}^{#1}}}}
+
+\newcommand{\pd}[3][]{\ensuremath{\frac{\partial^{#1} {#2}}{\partial {#3}^{#1}}}}
+
+\renewcommand{\U}[1]{\,\mathrm{#1}}
+
+\newcommand{\konst}{\,\mathrm{konst.}}
+
+\newcommand{\Id}[2]{\ensuremath{[\mathrm{Id}]_{#1}^{#2}}}
+
+\newcommand{\e}{\mathrm{e}}
+
+\newcommand{\kanon}[1]{\ensuremath{\left[#1\right]_\mathrm{K}}}
+
+\newcommand{\mat}[1]{\begin{pmatrix}#1\end{pmatrix}}
+
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+
+
+
+
+\title{Domácí práce na LAF II.}
+\date{15. 6. 2019}
+\author{Michal Grňo}
+
+\begin{document}
+
+\maketitle
+
+\begingroup
+\addtolength{\jot}{1em}
+
+
+\section{Cvičení 11 – hodnocená úloha}
+
+\subsection{Zadání}
+Mějme tenzor $T(A,B,\Gamma) = \Gamma(AB - BA)$, kde $A,B$ jsou reálné antisymetrické 3×3 matice a $\Gamma$ je forma z prostoru duálního. Bázi $K$ zvolíme tak, aby
+\begin{align*}
+    \begin{pmatrix}
+        a \\ b \\ c
+    \end{pmatrix}
+    =
+    \left[
+    \;
+    \begin{pmatrix}
+         0 &  c & b \\
+        -c &  0 & a \\
+        -b & -a & 0
+    \end{pmatrix}
+    \;
+    \right]_\mathrm{K}
+\end{align*}
+a skalární součin $g$ je v této bázi $\kanon{g} = \mathrm{E}$.
+
+Vyjádřete tenzor v bázi K: $\kanon{T} = \tensor{T}{_i_j^k}$. Určete obě kontrakce $T_{ij}^i, T_{ij}^j$. Ověřte, zda je tenzor $T_{ijk}$ úplně (anti)symetrický.
+
+
+\subsection{Řešení}
+Označíme si číselné vyjádření vektorů $A,B$ a kovektoru $\Gamma$.
+\begin{align*}
+    [A]_\mathrm{K} = x^i = \begin{pmatrix}
+        a \\ b \\ c
+    \end{pmatrix}, \;\;\;
+    [B]_\mathrm{K} = y^i = \begin{pmatrix}
+        d \\ e \\ f
+    \end{pmatrix}, \;\;\;
+    [\Gamma]_\mathrm{K^*} = \gamma_i
+\end{align*}
+\begin{align*}
+    [AB - BA]_\mathrm{K} =
+    \left[ \;
+    \begin{pmatrix}
+        0 & ae-bd & cd-af \\
+        bd-ae & 0 & bf-ce \\
+        af-cd & ce-bf & 0
+    \end{pmatrix} \;
+    \right]_\mathrm{K}
+    =
+    \begin{pmatrix}
+        bf-ce \\ cd-af \\ ae-bd
+    \end{pmatrix}
+\end{align*}
+\begin{align*}
+    T_{ij}^k \; x^i \; y^i \; \gamma_k
+    = \gamma_1 \; (x^2 y^3 - x^3 y^2)
+    + \gamma_2 \; (x^3 y^1 - x^1 y^3)
+    + \gamma_3 \; (x^1 y^2 - x^2 y^1)
+    = \gamma (x \times y).
+\end{align*}
+Odtud vidíme, že spuštěním indexu $k$ získáme smíšený součin:
+\begin{gather*}
+    T_{ijk} \; x^i \; y^j \; z^k
+    = z \cdot (x \times y)
+    = \varepsilon_{ijk} \; x^i \; y^j \; z^k
+    \\
+    T_{ijk} = \varepsilon_{ijk},
+\end{gather*}
+$T_{ijk}$ je tedy zřejmě úplně antisymetrické.
+
+\bigskip
+
+Vypočteme nyní kontrakce:
+\begin{alignat*}{2}
+    T_{ij}^i &= g^{ik} \; T_{ijk}
+    = g^{ik} \; \varepsilon_{ijk}
+    = &\sum_i \varepsilon_{iji}
+    = 0
+    \\
+    T_{ij}^j &=
+    &\sum_i \varepsilon_{iij}
+    = 0
+\end{alignat*}
+
+
+\subsection{Výsledek}
+Tenzor $T$ má v bázi K tvar $\tensor{T}{_i_j^k} = \tensor{\varepsilon}{_i_j^k} = \tensor{g}{^k^l} \; \tensor{\varepsilon}{_i_j_l}$. Z toho důvodu jsou obě kontrakce $T_{ij}^i$ a $T_{ij}^j$ nulové a tenzor $T_{ijk}$ úplně antisymetrický.
+
+
+
+
+
+\section{Cvičení 11 – domácí úloha}
+
+\subsection{Zadání}
+Mějme bázi $B$ prostoru $\mathbb{R}^2$:
+\begin{align*}
+    B = (e_1, e_2)
+    = ( \,
+    \begin{pmatrix}
+        1 \\ 2
+    \end{pmatrix}
+    , \;
+    \begin{pmatrix}
+        1 \\ 3
+    \end{pmatrix}
+    \, ).
+\end{align*}
+Nechť $T$ je bilineární forma $T = e^1 \otimes e^2 - e^2  \otimes e^1 + 2e^2 \otimes e^2$ a $g$ skalární součin $\kanon{g} = \begin{pmatrix} 2 & -1 \\ -1 & 1 \end{pmatrix}$. Nalezněte duální bázi $B^*$, matici $\kanon{T}$, vyjádření tenzoru $\widetilde{T} = T(\sharp_g \cdot, \cdot)$ pomocí $\widetilde{T}^i_j \; e_i \otimes e^j$ a jeho kontrakci.
+
+\subsubsection{Řešení}
+Pro duální bázi platí podmínka $e^i(e_j) = \delta^i_j$, zapsáno maticově:
+\begin{align*}
+    \renewcommand{\arraystretch}{1.6}
+    \begin{pmatrix}[c]
+        [e^1]_K \\ \hline
+        [e^2]_K
+    \end{pmatrix}
+    \renewcommand{\arraystretch}{1}
+    \begin{pmatrix}[c|c]
+        \; & \;
+        \\
+        [e_1]_K &
+        [e_2]_K
+        \\
+        \; & \;
+    \end{pmatrix}
+    = E.
+\end{align*}
+Duální bázi tedy tvoří řádky inverzní matice: $B^* = \Big((3 \;\; -1),\; (-2 \;\; 1)\Big)$. Dále vypočteme matici
+\begin{align*}
+    \kanon{T}
+    &= \kanon{e^1 \otimes e^2 - e^2  \otimes e^1 + 2e^2 \otimes e^2} \\
+    &= \mat{3\\-1} \mat{-2&1} - \mat{-2\\1} \mat{3&-1} + \mat{-2\\1} \mat{-2&1} \\
+    &= \mat{8 & -3 \\ -5 & 2}
+\end{align*}
+Nyní si vyjádříme tenzor $\widetilde{T}$:
+\begin{align*}
+    \widetilde{T}^i_j &= g^{ik} T_{kj} = \tensor{\Big( \kanon{g^{-1}} \kanon{T} \Big)}{^i_j} \\
+    \kanon{\widetilde{T}} &=
+    \mat{2 & -1 \\ -1 & 1}^{-1}
+    \mat{8 & -3 \\ -5 & 2} =
+    \mat{1 & 1 \\ 1 & 2}
+    \mat{8 & -3 \\ -5 & 2} =
+    \mat{3 & -1 \\ -2 & 1} \\
+    \widetilde{T}^i_j &= 3 e_1 \otimes e^1 - e_1 \otimes e^2 -2 e_2 \otimes e^1 + e_2 \otimes e^2
+\end{align*}
+A jeho kontrakce je
+\begin{align*}
+    C^1_1 \widetilde{T} = \widetilde{T}^i_i = \mathrm{Tr} \kanon{\widetilde{T}} = 4
+\end{align*}
+
+
+
+
+
+\section{Cvičení 11 – procvičovací úloha 1}
+
+\subsection{Zadání}
+Nechť $T$ je tenzor typu $(2,2)$ na $\mathbb{R}^n$ definovaný předpisem
+\begin{align*}
+    T(u,v,\phi,\psi) = \phi(u) \psi(v).
+\end{align*}
+Jeho čtyři možné kontrakce zapište ve tvaru $S^i_j \varepsilon_i \otimes \varepsilon^j$, kde $(\varepsilon_i)_1^n$ je kanonická báze $\mathbb{R}^n$.
+
+\subsection{Řešení}
+Přepsáním definice do indexové notace získáme
+\begin{align*}
+    &T(u,v,\phi,\psi) = \phi(u) \psi(v) \\
+    &T^{ij}_{kl} \; \phi_i \, \psi_j \, u^k \, v^l = \phi_i u^i \; \psi_j v^j \\
+    &T^{ij}_{kl} = \delta^i_k \delta^j_l
+\end{align*}
+Pro kontrakce tedy platí
+\begin{align*}
+    &T^{ia}_{ib} = \delta^i_i \delta^a_b = n\delta^a_b \\
+    &T^{ai}_{bi} = \delta^a_b \delta^i_i = n\delta^a_b \\
+    &T^{ia}_{bi} = \delta^i_b \delta^a_i = \delta^a_b \\
+    &T^{ai}_{ib} = \delta^a_i \delta^i_b = \delta^a_b
+\end{align*}
+Přepsáním do formy $S^i_j \varepsilon_i \otimes \varepsilon^j$ získáme
+\begin{align*}
+    &C^1_1 T = C^2_2 T = n\delta^a_b \; \varepsilon_a \otimes \varepsilon^b \\
+    &C^1_2 T = C^2_1 T = \delta^a_b \; \varepsilon_a \otimes \varepsilon^b
+\end{align*}
+
+
+
+\section{Cvičení 11 – procvičovací úloha 2}
+\subsection{Zadání}
+Mějme Minkowského prostor s metrickým tenzorem $\eta = \mathrm{diag}(1,-1,-1,-1)$. Faradayův tenzor $F^\mu_\nu$ má tvar:
+\begin{align*}
+    F^\mu_\nu = \mat{
+        0 & E_x & E_y & E_z \\
+        E_x & 0 & B_z & -B_y \\
+        E_y & -B_z & 0 & B_x \\
+        E_z & B_y & -B_x & 0
+    }.
+\end{align*}
+Vypočtěte $F^{\mu\nu}$ a $F_{\mu\nu}$ a ověřte, že jsou antisymetrické. Vypočtěte $F^{\mu\nu} F_{\mu\nu}$.
+
+\subsection{Řešení}
+Zjevně $\eta^{-1} = \eta$. Zdvižení a spuštění indexu vypočteme jako
+\begin{align*}
+    F^{\mu\nu} &= \tensor{F}{^\mu_\kappa} \eta^{\kappa\nu} = \mat{
+        0 & E_x & E_y & E_z \\
+        E_x & 0 & B_z & -B_y \\
+        E_y & -B_z & 0 & B_x \\
+        E_z & B_y & -B_x & 0
+    } \mat{1 &&&\\ & -1 &&\\ && -1 &\\ &&& -1}
+    = \mat{
+        0 & -E_x & -E_y & -E_z \\
+        E_x & 0 & -B_z & B_y \\
+        E_y & B_z & 0 & -B_x \\
+        E_z & -B_y & B_x & 0
+    } \\
+    F_{\mu\nu} &= \eta_{\mu\kappa} \tensor{F}{^\kappa_\nu}  =
+    \mat{1 &&&\\ & -1 &&\\ && -1 &\\ &&& -1}
+    \mat{
+        0 & E_x & E_y & E_z \\
+        E_x & 0 & B_z & -B_y \\
+        E_y & -B_z & 0 & B_x \\
+        E_z & B_y & -B_x & 0
+    }
+    = \mat{
+        0 & E_x & E_y & E_z \\
+        -E_x & 0 & -B_z & B_y \\
+        -E_y & B_z & 0 & -B_x \\
+        -E_z & -B_y & B_x & 0
+    }
+\end{align*}
+Obě matice jsou zjevně antisymetrické, platí tedy $F^{\mu\nu} = -F^{\nu\mu}$ a $F_{\mu\nu} = -F_{\nu\mu}$. Nakonec vypočteme
+\begin{align*}
+    F^{\mu\nu} F_{\mu\nu}
+    &= -F^{\mu\nu}F_{\nu\mu}
+    = -\mathrm{Tr}(
+        \mat{
+            0 & -E_x & -E_y & -E_z \\
+            E_x & 0 & -B_z & B_y \\
+            E_y & B_z & 0 & -B_x \\
+            E_z & -B_y & B_x & 0
+        }
+        \mat{
+            0 & E_x & E_y & E_z \\
+            -E_x & 0 & -B_z & B_y \\
+            -E_y & B_z & 0 & -B_x \\
+            -E_z & -B_y & B_x & 0
+        }
+    ) \\
+    &= ({E_x}^2 + {E_y}^2 + {E_z}^2) + ({E_x}^2 - {B_z}^2 - {B_y}^2) + ({E_y}^2 - {B_z}^2 - {B_x}^2) + ({E_z}^2 - {B_y}^2 - {B_x}^2) \\
+    &= 2 \left( \norm{E}^2 - \norm{B}^2 \right)
+\end{align*}
+
+
+
+
+
+% \section{Cvičení 11 – rozšiřující úloha}
+
+% \subsection{Zadání}
+% Dokažte pro $a \in \Lambda^p, b \in \Lambda^q$, že $a \wedge b$ je bilineární, asociativní zobrazení, pro které platí gradovaná komutativita $a \wedge b = (-1)^{p+q} \; b \wedge a$. Dokažte také, že 
+% \begin{align*}
+%     a = \frac{1}{p!} \, a_{i_1} \, ... \; a_{i_p} \; e^{i_1} \wedge ... \wedge e^{i_p}.
+% \end{align*}
+% Operátor $\wedge$ je definován jako
+% \begin{align*}
+%    h 
+% \end{align*}
+
+% \subsection{Řešení}
+
+
+
+\endgroup
+
+\end{document}

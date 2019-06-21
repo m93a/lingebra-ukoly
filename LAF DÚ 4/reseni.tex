@@ -1,0 +1,318 @@
+%!TEX program = xelatex
+
+\documentclass[]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{mathtools}
+\usepackage{bm}
+\usepackage{bbold}
+\usepackage{nameref}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage[a4paper, total={6in, 9.5in}]{geometry}
+\usepackage{fancyhdr}
+\usepackage{xfrac}
+\usepackage{tensor}
+\usepackage{float}
+\usepackage{stmaryrd}
+\usepackage{relsize}
+
+\makeatletter
+\renewcommand*\env@matrix[1][*\c@MaxMatrixCols c]{%
+  \hskip -\arraycolsep
+  \let\@ifnextchar\new@ifnextchar
+  \array{#1}}
+\makeatother
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\leftmark}
+\rhead{Michl Grňo}
+\cfoot{\thepage}
+
+
+\renewcommand{\sectionmark}[1]{\markboth{#1}{}}
+
+
+\renewcommand{\d}[1][]{\ensuremath{\,\mathrm{d}{#1}}}
+\newcommand{\dd}[3][]{\ensuremath{\frac{\d^{#1} {#2}}{\d{#3}^{#1}}}}
+\newcommand{\pd}[3][]{\ensuremath{\frac{\partial^{#1} {#2}}{\partial {#3}^{#1}}}}
+
+\newcommand{\R}{\mathbb{R}}
+\renewcommand{\C}{\mathbb{C}}
+
+\renewcommand{\U}[1]{\,\mathrm{#1}}
+
+\newcommand{\konst}{\,\mathrm{konst.}}
+\newcommand{\e}{\mathrm{e}}
+
+\newcommand{\Ker}{\mathrm{Ker}\;}
+\renewcommand{\Im}{\mathrm{Im}\;}
+\newcommand{\Tr}{\mathrm{Tr}\;}
+
+\newcommand{\diag}[2]{\mathrm{diag}_{#1}(#2)}
+\newcommand{\Id}[2]{\ensuremath{[\mathrm{Id}]_{#1}^{#2}}}
+
+\newcommand{\kanon}[1]{\ensuremath{\left[#1\right]_\mathrm{K}}}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcommand{\mat}[1]{\begin{pmatrix}#1\end{pmatrix}}
+
+\newcommand{\recip}[1]{\frac{1}{#1}}
+\newcommand{\recipsqrt}[1]{\frac{1}{\sqrt{#1}}}
+\newcommand{\x}{\times}
+
+\DeclarePairedDelimiter\nnorm{\lVert}{\rVert}
+
+\newenvironment{absolutelynopagebreak}
+  {\par\nobreak\vfil\penalty0\vfilneg
+   \vtop\bgroup}
+  {\par\xdef\tpd{\the\prevdepth}\egroup
+   \prevdepth=\tpd}
+  
+  
+
+
+
+
+\title{Domácí práce na LAF II.}
+\date{16. 6. 2019}
+\author{Michal Grňo}
+
+\begin{document}
+
+\maketitle
+
+\begingroup
+\addtolength{\jot}{1em}
+
+\section{Cvičení 5 – rozšiřující úloha 1}
+\subsection{Zadání}
+Nechť $A \in \C^{m \x n}$. Číslo $\norm{A}_2 := \max_{x \in \R^n} \frac{\norm{Ax}}{\norm{x}}$ se nazývá \textit{spektrální norma} matice $A$. Normy ve zlomku na pravé straně definice jsou normy indukované standardním skalárním součinem na $\C^m$ a $\C^n$. Ukažte, že
+\begin{enumerate}
+  \item spektrální norma matice $A$ je rovna její nejvyšší singulární hodnotě $\sigma_1$.
+  \item spektrální norma je norma na prostoru $\C^{m \x n}$, ale není indukovaná skalárním součinem.
+  \item tzv. \textit{Frobeniova norma} na $\C^{m \x n}$ indukovaná skalárním součinem $\langle A, B \rangle := \Tr(A^+B)$ se pomocí singulárních hodnot vyjádří jako $\norm{A}_F = \sqrt{ {\sigma_1}^2 + ... + {\sigma_r}^2}$.
+  \item Frobeniova i spektrální norma splňují nerovnost $\norm{AB} \leq \norm{A}\norm{B}$ pro libovolné matice $A \in \C^{m \x n}, \; B \in \C^{n \x p}$.
+\end{enumerate}
+
+\subsection{Řešení}
+\subsubsection[normajesigma]{$\norm{A}_2 = \sigma_1$}
+Označme si singulární rozklad $A = U \Sigma V^+$ a normovaný vektor $\widehat{x} = \frac{x}{\norm{x}}$. Pro pohodlnost si ještě zavedeme označení $\widehat{\R}^n = \big\{ x \in \R^n \; \big| \; \norm{x} = 1\big\}$. Definici spektrální normy můžeme rozepsat jako:
+\begin{align*}
+  \norm{A}_2
+  &= \max_{x \in \R^n} \frac{\norm{Ax}}{\norm{x}}
+  = \max_{x \in \R^n} \frac{\norm{U \Sigma V^+ x}}{\norm{x}}
+  = \max_{\widehat{x} \in \widehat{\R}^n} \frac{\nnorm[\Big]{U \Sigma V^+ \norm{x} \widehat{x}}}{\norm{x}}
+  = \max_{\widehat{x} \in \widehat{\R}^n} \; \norm{U \Sigma V^+ \widehat{x}}.
+\end{align*}
+Nyní využijeme toho, že matice $U$ a $V$ jsou unitární, platí tedy $\norm{Ux} = \norm{x}$ a  $\widehat{\R}^n \xrightarrow{\;V\;} \widehat{\R}^n$.
+\begin{align*}
+  \norm{A}_2
+  &= \max_{\widehat{x} \in \widehat{\R}^n} \; \norm{U \Sigma V^+ \widehat{x}}
+  = \max_{\widehat{x} \in \widehat{\R}^n} \; \norm{U \Sigma \widehat{x}}
+  = \max_{\widehat{x} \in \widehat{\R}^n} \; \norm{\Sigma \widehat{x}}
+  \\
+  &= \max_{\widehat{x} \in \widehat{\R}^r} \sqrt{\sigma_1 \widehat{x}_1 + ... \sigma_r \widehat{x}_r}
+  = \max_{i \in \{1, ..., r\}} \; \sigma_i
+  = \sigma_1.
+\end{align*}
+
+\subsubsection[jetonorma]{$\norm{A}_2$ je norma}
+Nyní dokážeme, že $\norm{A}_2$ je norma. Norma na $\C^{m \x n}$ musí splňovat tyto tři podmínky:
+\begin{enumerate}
+  \item $\norm{A} = 0 \iff A = 0$
+  \item $\norm{aA} = |a| \, \norm{A} \;\;\; \forall a \in \mathbb{C}$
+  \item $\norm{A + B} \leq \norm{A} + \norm{B}$
+\end{enumerate}
+První podmínku lze rozepsat jako
+\begin{align*}
+  \norm{A}_2 = 0 \iff \norm{\Sigma}_2 = 0 \iff \Sigma = 0 \iff A = 0.
+\end{align*}
+Protože je $\Sigma$ pouze vyjádřením $A$ vůči jiným ON bázím, je zřejmé, že musí ekvivalence platit.
+
+V důkazu druhé podmínky použijeme vyjádření komplexního čísla v polárních souřadnicích $a = |a| \exp \arg a$. Singulární rozklad škálované matice označíme $aA = U' \Sigma' {V'}^+$. Dostaneme:
+\begin{align*}
+  aA = |a| \; (\exp \arg a) \; U \Sigma V^+ = U' \Sigma' {V'}^+
+\end{align*}
+Aby rovnost platila, musíme členy $|a|$ a $\exp \arg a$ „rozdělit“ mezi matice $U'$, $\Sigma'$ a ${V'}^+$. Je zřejmé, že unitární matice $U,V$ nemůžeme škálovat faktorem $|a|$, oproti tomu matice $\Sigma$ musí zůstat reálná kladná, proto ji nemůžeme násobit komplexní jednotkou $\exp \arg a$. Bude tedy platit:
+\begin{gather*}
+  U' = bU, \;\;\; V' = cV, \;\;\; \mathrm{kde} \; b \overline{c} = \exp \arg a, \\
+  \Sigma' = |a| \Sigma
+  \; \implies \;
+  \sigma_1' = |a| \sigma_1
+  \; \implies \;
+  \norm{aA}_2 = |a| \, \norm{A}_2.
+\end{gather*}
+
+A nakonec důkaz třetí podmínky:
+\begin{align*}
+  \norm{A+B}_2
+  &= \max_{\widehat{x} \in \widehat{R}^n} \; \norm{(A+B)\widehat{x}} \\
+  &= \max_{\widehat{x} \in \widehat{R}^n} \; \norm{A\widehat{x} + B\widehat{x}} \\
+  &\leq \max_{\widehat{x} \in \widehat{R}^n} \; \left( \norm{A\widehat{x}} + \norm{B\widehat{x}} \right) \\
+  &\leq \max_{\widehat{x} \in \widehat{R}^n} \norm{A\widehat{x}} + \max_{\widehat{x} \in \widehat{R}^n} \norm{B\widehat{x}} \\
+  &= \norm{A}_2 + \norm{B}_2.
+\end{align*}
+
+\subsubsection[neindukovana]{$\norm{A}_2$ není norma indukovaná skalárním součinem}
+Mějme skalární součin $\langle \cdot, \cdot \rangle$ obecného vektorového prostoru, jím indukovaná norma je definována jako $\norm{x}^2 = \langle x, x \rangle$. Vybereme-li dva libovolné vektory $x,y$ z tohoto prostoru, zřejmě pro ně musí platit
+\begin{align*}
+  \norm{x+y}^2 &= \norm{x}^2 + \norm{y}^2 + \langle x, y \rangle + \langle y, x \rangle, \\
+  \norm{x-y}^2 &= \norm{x}^2 + \norm{y}^2 - \langle x, y \rangle - \langle y, x \rangle.
+\end{align*}
+Sečtením těchto rovnic získáme tzv. \textit{rovnoběžníkový zákon} – nutnou podmínku pro existenci skalárního součinu, který by indukoval normu $\norm\cdot$:
+\begin{align*}
+  \norm{x+y}^2 + \norm{x-y}^2 = 2\norm{x}^2 + 2 \norm{y}^2.
+\end{align*}
+
+My chceme dokázat, že neexistuje skalární součin, který by indukoval spektrální normu na $\C^{m \x n}$. Budeme předpokládát, že $m,n\geq2$, pro menší matice provedeme diskusi na konci. Protože musí rovnoběžníkový zákon v případě indukované normy platit pro všechny prvky $\C^{m \x n}$, stačí nám ukázat, že neplatí na 4-rozměrném podprostoru $\C^{2\x2}$. Prvky, pro které budeme neplatnost dokazovat, budou blokové matice (spodní indexy značí rozměry bloků):
+\begin{align*}
+  \widetilde{A} = \mat{
+    A_{2\x2} & 0_{2\x(n-2)} \\
+    0_{(m-2)\x2} & 0_{(m-2)\x(n-2)}
+  },
+  \hspace{3em}
+  \widetilde{B} = \mat{
+    B_{2\x2} & 0_{2\x(n-2)} \\
+    0_{(m-2)\x2} & 0_{(m-2)\x(n-2)}
+  }.
+\end{align*}
+\begin{absolutelynopagebreak}
+  Zde se nám bude hodit mezivýsledek procvičovací úlohy 3:
+  \begin{figure}[H]
+    \centering
+    \fbox{
+        \parbox{.8\textwidth}{
+          Mějme matici $A \in \C^{m \x n}$ a blokovou matici $\widetilde{A} \in \C^{(m+p)\x(n+q)}$ takovou, že:
+          \begin{align*}
+            \widetilde{A} = \mat{
+              A_{m \x n} & 0_{m \x q} \\
+              0_{p \x n} & 0_{p \x q}
+            }.
+          \end{align*}
+          Označíme-li si nyní jejich singulární rozklady $A = U \Sigma V^+, \; \widetilde{A} = \widetilde{U} \widetilde{\Sigma} \widetilde{V}^+$, bude platit:
+          \begin{align*}
+            \widetilde{\Sigma}
+            = \mat{
+              \Sigma_{m \x n} & 0_{m \x q} \\
+              0_{p \x n} & 0_{p \x q}
+            }.
+          \end{align*}
+        }
+    }
+  \end{figure}
+\end{absolutelynopagebreak}
+Z toho je zřejmé, že $\nnorm{\widetilde{A}}_2 = \nnorm{A}_2$, stačí tedy najít matice $2\x2$, které nesplňují rovnoběžníkový zákon, a dokážeme tím jeho neplatnost pro $\C^{m \x n}$. Takovými maticemi jsou například:
+\begin{align*}
+  A = \mat{
+    1 & 0 \\
+    0 & 1
+  },
+  \;\;\;
+  B = \mat{
+    0 & 1 \\
+    1 & 0
+  }.
+\end{align*}
+\begin{align*}
+  \norm{A}_2
+  = \norm{\mat{
+    1 & 0 \\ 0 & 1
+  }}_2
+  = 1,
+\end{align*}
+\begin{align*}
+  \norm{B}_2
+  = \norm{\mat{
+    0 & 1 \\ 1 & 0
+  }}_2
+  = 1,
+\end{align*}
+\begin{align*}
+  \norm{A+B}_2
+  = \norm{\mat{
+    1 & 1 \\ 1 & 1
+  }}_2
+  = 2,
+\end{align*}
+\begin{align*}
+  \norm{A-B}_2
+  = \norm{\mat{
+    1 & -1 \\ -1 & 1
+  }}_2
+  = 2,
+\end{align*}
+\begin{align*}
+  {\norm{A+B}_2}^2 + {\norm{A-B}_2}^2 = 2^2 + 2^2 = 8,
+\end{align*}
+\begin{align*}
+  2 {\norm{A}_2}^2 + 2 {\norm{A}_2}^2 = 2 \cdot 1^2 + 2 \cdot 1^2 = 4,
+\end{align*}
+\begin{align*}
+  8 \not= 4 \implies \mathlarger{\mathlarger\lightning}.
+\end{align*}
+
+Dokázali jsme, že $\norm{\cdot}_2$ není norma indukovaná skalárním součinem na $\C^{m \x n}$, kde $m,n \geq 2$. Vraťme se ještě nakrátko k prostorům menší dimenze. V $\C^{1\x1} = \C$ je singulární rozklad
+\begin{align*}
+  z = \underbrace{1}_U \underbrace{|z|}_\Sigma \underbrace{\exp \arg z}_{V^+}.
+\end{align*}
+Zřejmě tedy $\norm{z}_2 = |z|$, což je norma indukovaná skalárním součinem $\langle a, b \rangle = \bar{a}b$. Pro prostor sloupcových vektorů $\C^{m\x1} = \C^m$ lze ukázat, že jejich jediné singulární číslo je rovno normě indukované standardním skalárním součinem, obdobně je tomu u řádkových vektorů $\C^{1 \x m}$.
+
+
+\subsubsection{Vztah $\norm{A}_F$ a singulárních čísel}
+Frobeniova norma je definována jako $\norm{A}_F = \sqrt{\Tr A^+A}$. Z teorie víme, že matice $A^+A$ je hermitovská, tedy i ortogonálně diagonalizovatelná:
+\begin{align*}
+  A^+A = V \diag{}{\lambda_1, \lambda_2, ...} V^+.
+\end{align*}
+Víme, že transformace typu $R^{-1}AR$ zachovávají charakteristický polynom matice $A$, a tedy i její stopu, bude proto
+\begin{align*}
+  \Tr A^+ A = \lambda_1 + \lambda_2 + ...
+\end{align*}
+Vlastní čísla matice $A^+A$ jsou ovšem čtverce singulárních hodnot matice $A$, platí tedy vztah:
+\begin{align*}
+  \norm{A}_F
+  = \sqrt{\Tr A^+A}
+  = \sqrt{\lambda_1 + \lambda_2 + ...}
+  = \sqrt{ {\sigma_1}^2 + {\sigma_2}^2 + ... }.
+\end{align*}
+
+
+\subsubsection{Submultiplikativita norem}
+Začneme Frobeniovou normou:
+\begin{align*}
+  {\norm{AB}_F}^2
+  &= \Tr( (AB)^+ AB ) \\
+  &= \Tr(B^+A^+AB) \\
+  &= \Tr(A^+A \; BB^+) \\
+  &\leq \Tr(A^+A) \; \Tr(BB^+) \\
+  &= \Tr(A^+A) \; \Tr(BB^+) \\
+  &= {\norm{A}_F}^2 \; {\norm{B}_F}^2,
+\end{align*}
+kde na 3. a 5. řádku byla využita vlastnost $\Tr(AB...C) = \Tr(B...CA)$ a na 4. řádku $\Tr(AB) \leq \Tr A \; \Tr B$ pro pozitivně semidefinitní $A,B$ (vyplývá z Cauchy-Schwarzovy nerovnosti). Protože je norma nezáporná, platí po odmocnění rovnice
+\begin{align*}
+  \norm{AB}_F \leq \norm{A}_F \norm{B}_F.
+\end{align*}
+
+\bigskip
+
+Z definice spektrální normy vyplývá:
+\begin{align*}
+  &\norm{A}_2 = \max_{x \in \R^n} \frac{\norm{Ax}}{\norm{x}} \\
+  &\implies \; \norm{A}_2 \geq \frac{\norm{Ax}}{\norm{x}} \;\;\;\; \forall x \in \R^n \\
+  &\implies \; \norm{A}_2 \norm{x} \geq \norm{Ax} \;\;\;\; \forall x \in \R^n \setminus \{0\}.
+\end{align*}
+S použitím této znalosti můžeme vyjádřit:
+\begin{align*}
+  \norm{ABx} = \norm{A(Bx)} \leq \norm{A}_2 \norm{Bx} \leq \norm{A}_2 \norm{B}_2 \norm{x} \;\;\;\; \forall x \in \R^n \setminus \{0\}
+\end{align*}
+\begin{align*}
+  \frac{\norm{ABx}}{\norm{x}} \leq \norm{A}_2 \norm{B}_2 \;\;\;\; \forall x \in \R^n \setminus \{0\}
+\end{align*}
+Vybereme-li nyní takové $x_0 \in \R^n \setminus \{0\}$, aby pro něj byl výraz na levé straně maximální, bude platit:
+\begin{align*}
+  \norm{AB}_2 = \max_{x \in \R^n} \frac{\norm{ABx}}{\norm{x}} = \frac{\norm{ABx_0}}{\norm{x_0}} \leq \norm{A}_2 \norm{B}_2.
+\end{align*}
+
+
+\endgroup
+
+\end{document}
